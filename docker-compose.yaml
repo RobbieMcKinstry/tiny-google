@@ -1,0 +1,8 @@
+version: '2'
+services:
+    spark:
+        image: "velvia/spark-jobserver:0.6.2.mesos-0.28.1.spark-1.6.1"
+        ports:
+             - "8090:8090"
+        volumes:
+             - ".:/mounted"
