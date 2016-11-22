@@ -6,3 +6,8 @@ services:
              - "8090:8090"
         volumes:
              - ".:/mounted"
+
+    golang:
+        build:
+            context: .
+
