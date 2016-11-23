@@ -11,7 +11,9 @@ $(function() {
     function search(cmd, term) {
         // Make a GET request to the /tiny-google URL for the particular search term
         $.getJSON(url, { search_query: cmd }, function(data) {
-            term.echo(data);
+
+            var spark = data.spark;
+            term.echo("Spark Runtime: " + spark.runtime + "\n");
         });
     }
 
