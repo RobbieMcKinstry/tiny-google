@@ -1,5 +1,13 @@
 # compile the jar (run from the host machine)
-# sbt package
+rake build
+
+# launch the docker containers (run from the host machine)
+rake up
+
+# ssh into the spark box (run from the host machine)
+docker exec -it finalproject_spark_1 /bin/bash
+
+# now you're inside the docker container
 
 # upload the jar
 curl --data-binary @/mounted/target/scala-2.11/simple-project_2.11-1.0.jar localhost:8090/jars/test
