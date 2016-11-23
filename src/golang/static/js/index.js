@@ -2,8 +2,8 @@ $(function() {
 
     var commands = {
         search: 'search ',
-        help:   'help ',
-        upload: 'upload '
+        help:   'help',
+        upload: 'upload'
     };
 
     function search(cmd, term) {
@@ -20,7 +20,7 @@ $(function() {
 
     function cmd_handler(cmd, term) {
 
-        if (cmd.startsWith(commands.search) {
+        if (cmd.startsWith(commands.search)) {
             search(
                 cmd.substring(commands.search.length),
                 term
@@ -41,14 +41,12 @@ $(function() {
     }
 
     var options = {
-        width: 500,
-        height: 230,
+        greetings: null,
         prompt: 'tiny-google $',
-        greetings: 
         onInit: function(term) {
-            term.echo("Type 'upload', 'search <phrase>', or 'help' \n");
+            help(null, term);
         },
     };
 
-    $('#terminal').terminal(cmd_handler, options);
+    $('body').terminal(cmd_handler, options);
 });
