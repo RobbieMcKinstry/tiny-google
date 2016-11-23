@@ -1,13 +1,18 @@
+var commands = {
+    search: 'search ',
+    help:   'help',
+    upload: 'upload'
+};
+
+var url = '/tiny-google';
+
 $(function() {
 
-    var commands = {
-        search: 'search ',
-        help:   'help',
-        upload: 'upload'
-    };
-
     function search(cmd, term) {
-        term.echo(cmd);
+        // Make a GET request to the /tiny-google URL for the particular search term
+        $.getJSON(url, { search_query: cmd }, function(data) {
+            term.echo(data);
+        });
     }
 
     function help(cmd, term) {
@@ -15,6 +20,7 @@ $(function() {
     }
 
     function upload(cmd, term) {
+        $.post(url, { document: null } );
         term.echo(cmd);
     }
 
@@ -22,17 +28,17 @@ $(function() {
 
         if (cmd.startsWith(commands.search)) {
             search(
-                cmd.substring(commands.search.length),
+                $.trim(cmd.substring(commands.search.length)),
                 term
             );
         } else if (cmd.startsWith(commands.help)) {
             help(
-                cmd.substring(commands.help.length),
+                $.trim(cmd.substring(commands.help.length)),
                 term
             );
         } else if (cmd.startsWith(commands.upload)) {
             upload(
-                cmd.substring(commands.upload.length),
+                $.trim(cmd.substring(commands.upload.length)),
                 term
             );
         } else {
@@ -42,7 +48,7 @@ $(function() {
 
     var options = {
         greetings: null,
-        prompt: 'tiny-google $',
+        prompt: 'tiny-google $ ',
         onInit: function(term) {
             help(null, term);
         },
