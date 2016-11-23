@@ -8,6 +8,10 @@ services:
              - ".:/mounted"
 
     golang:
+        links:
+            -  "spark"
         build:
             context: .
+        ports:
+             - "8080:8080"
 

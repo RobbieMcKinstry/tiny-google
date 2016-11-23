@@ -6,7 +6,7 @@ import org.apache.spark._
 
 object SimpleApp extends SparkJob {
     def main(args: Array[String]) {
-        val conf = new SparkConf().setMaster("local[4]").setAppName("NoOpJob")
+        val conf = new SparkConf().setMaster("local[4]").setAppName("Simple App")
         val sc = new SparkContext(conf)
         val config = ConfigFactory.parseString("")
         val results = runJob(sc, config)
