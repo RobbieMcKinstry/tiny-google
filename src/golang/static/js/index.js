@@ -9,11 +9,37 @@ var url = '/tiny-google';
 $(function() {
 
     function search(cmd, term) {
+
+        // Returns a JSON blob
+        // with the following structure
+        // {
+        //     'mr_runtime': Number,
+        //     'spark_runtime': Number,
+        //     'links': [{
+        //         document_name: string,
+        //         document_link: string,
+        //         context:       string,
+        //     }, {
+        //       .............
+        //    }]
+        // }
+
+
         // Make a GET request to the /tiny-google URL for the particular search term
         $.getJSON(url, { search_query: cmd }, function(data) {
 
-            var spark = data.spark;
-            term.echo("Spark Runtime: " + spark.runtime + "\n");
+            var mr_runtime = data.mr_runtime;
+            var spark_runtime = data.spark_runtime;
+            var links = data.links;
+
+
+            // JACK START HERE
+
+            term.echo("Spark Runtime: " + spark_runtime + "\n");
+            term.echo("MR Runtime: " + mr_runtime + "\n");
+
+
+            // JACK DON'T MODIFY BENEATH THIS LINE
         });
     }
 
