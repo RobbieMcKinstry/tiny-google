@@ -41,15 +41,11 @@ Our inverted index will be seralized into a persistent format (with JSON or usin
 
 Spark jobs will do the same, only at a separate path, so as not to incur a race condition or share data between the two systems.
 
-# Spark
-
-# Map Reduce
-
 # Delivery Dates
 
-    - Final Paper
-    - Web Front End (mostly done)
-    - Golang Reverse Proxy and Timer (partially complete)
-    - Inverted Index
-    - Map Reduce Jobs
-    - Spark Jobs
+    - Web Front End (mostly done), 12/10
+    - Golang Reverse Proxy and Timer (partially complete), 12/11
+    - Inverted Index, 12/12
+    - Map Reduce Jobs, 12/16
+    - Spark Jobs, 12/16
+    - Final Paper, 12/17
