@@ -1,6 +1,6 @@
 # Overview
 
-From having spoken to other students, it seems that most of our peers are intending to launch the MapReduce and Spark processes by shelling out to the console programmatically from within their main progress. That is, they launch a command line application written in Java or Scala, and when they want to start a MapReduce or Scala job, they use a module like [java.lang.Process](https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html), and launching the Hadoop job as subprocess.
+One approach to this project would be to launch the MapReduce and Spark processes by shelling out to the console programmatically from within their main progress. That is, launch a command line application written in Java or Scala, start a MapReduce or Scala job, use a module like [java.lang.Process](https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html), and launch the Hadoop job as a subprocess.
 
 There are a couple of weaknesses to this approach. First, the program becomes heavily dependent on the environment in which it's running. The `PATH` must contain an executable with the approperate name. No shell syntax may be used, limiting the extensibility of the command issued. 
 
