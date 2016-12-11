@@ -1,6 +1,6 @@
 # Overview
 
-From having spoken to other students, it seems that most of our peers are intending to launch the MapReduce and Spark processes by shelling out to the console programmatically from within their main progress. That is, they launch a command line application written in Java or Scala, and when they want to start a MapReduce or Scala job, they use a module like [java.lang.Process](https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html), and launching the Hadoop job as subprocess.
+One approach to this project would be to launch the MapReduce and Spark processes by shelling out to the console programmatically from within their main progress. That is, launch a command line application written in Java or Scala, start a MapReduce or Scala job, use a module like [java.lang.Process](https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html), and launch the Hadoop job as a subprocess.
 
 There are a couple of weaknesses to this approach. First, the program becomes heavily dependent on the environment in which it's running. The `PATH` must contain an executable with the approperate name. No shell syntax may be used, limiting the extensibility of the command issued. 
 
@@ -18,20 +18,20 @@ Users will access our application in a web browser. On loading the web page, a w
 
 # Architecture
 
-We will orchastrate the application with two Docker containers running under Docker Compose. The first container will run a Golang web server, which serves the static web front end. When an HTTP request from the front end is sent to the Go server, the server will launch and time two HTTP requests to the second container. The second container runs Hadoop, Spark, and MapReduce on top of a REST server. This is not an original container we developed, but a pre-existing one available as open source.
+We will orchestrate the application with two Docker containers running under Docker Compose. The first container will run a Golang web server, which serves the static web front end. When an HTTP request from the front end is sent to the Go server, the server will launch and time two HTTP requests to the second container. The second container runs Hadoop, Spark, and MapReduce on top of a REST server. This is not an original container we developed, but a pre-existing one available as open source.
 
 These two requests to the second container will launch a MR job and a Spark job. Each jobs reads from it's owned inverted index and writes it back out in the event of an upload. The jobs will return a JSON response back to the Go server, which will aggregate them into a payload for the client. The client will parse and display the results.
 
 
 # Inverted Index
 
-Our inverted index will map fom string keys (which are the search terms) to a list of references to appearences in a given document. 
+Our inverted index will map fom string keys (which are the search terms) to a list of documentRef objects, which is defined below. 
 
-    string -> documentRef
+    string -> List[documentRef]
 
 Each document reference stores the name of the document, the path to the document, and a list of positions in the document where the search term appears.
 
-    object document {
+    object documentRef {
         name: string
         path: string
         occurrences: List[FileLocation]
@@ -41,15 +41,11 @@ Our inverted index will be seralized into a persistent format (with JSON or usin
 
 Spark jobs will do the same, only at a separate path, so as not to incur a race condition or share data between the two systems.
 
-# Spark
-
-# Map Reduce
-
 # Delivery Dates
 
-    - Final Paper
-    - Web Front End (mostly done)
-    - Golang Reverse Proxy and Timer (partially complete)
-    - Inverted Index
-    - Map Reduce Jobs
-    - Spark Jobs
+    - Web Front End (mostly done), 12/10
+    - Golang Reverse Proxy and Timer (partially complete), 12/11
+    - Inverted Index, 12/12
+    - Map Reduce Jobs, 12/16
+    - Spark Jobs, 12/16
+    - Final Paper, 12/17
