@@ -1,9 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
-	// "io/ioutil"
+	"io"
+	"io/ioutil"
+	"log"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -13,12 +19,29 @@ const (
 	port      = ":8080"
 )
 
+const (
+	endpointBase       = "http://spark:8090"
+	jarUploadExtension = "/jars/test"
+	jarUploadEndpoint  = endpointBase + jarUploadExtension
+
+	contextExtension = "/contexts/test-context?num-cpu-cores=2&memory-per-node=1024m"
+	contextEndpoint  = endpointBase + contextExtension
+
+	executeURI  = endpointBase + "/jobs?appName=test&classPath=spark.jobserver.SimpleApp&context=test-context&sync=true"
+	jarFilePath = "/mounted/target/scala-2.11/simple-project_2.11-1.0.jar"
+)
+
 func main() {
+	time.Sleep(8000 * time.Millisecond)
+
 	fmt.Println("This is not hello world.")
 	fmt.Printf("Beginning the server on port %v \n", port)
 
-	r := mux.NewRouter()
+	// Initialize the context
+	initContext()
 
+	// Set up the router
+	r := mux.NewRouter()
 	s := http.StripPrefix("/static/", http.FileServer(http.Dir("/static/")))
 	r.PathPrefix("/static/").Handler(s)
 
@@ -28,10 +51,15 @@ func main() {
 	http.Handle("/", r)
 
 	panic(http.ListenAndServe(port, nil))
-	// First, we need to connect to the Yarn daemon.
-	// Load the jar and create the context
+}
 
-	// Then, we add the HTTP handlers to a simple server.
+func initContext() {
+	if _, err := postFile(jarFilePath, jarUploadEndpoint); err != nil {
+		log.Println(err)
+	}
+	if _, err := http.Post(contextEndpoint, "application/json", nil); err != nil {
+		log.Println(err)
+	}
 }
 
 func indexHandler(w http.ResponseWriter, req *http.Request) {
@@ -39,10 +67,16 @@ func indexHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func searchHandler(w http.ResponseWriter, req *http.Request) {
-	// resp, _ := http.Post("http://spark:8090/jobs?appName=test&classPath=spark.jobserver.SimpleApp&context=test-context&sync=true", "application/json", nil)
-	// content, _ := ioutil.ReadAll(resp.Body)
+	resp, err := http.Post("http://spark:8090/jobs?appName=test&classPath=spark.jobserver.SimpleApp&context=test-context&sync=true", "application/json", nil)
+	if err != nil {
+		log.Println(err)
+	}
+	content, err := ioutil.ReadAll(resp.Body)
+	fmt.Println("Here is the response body:")
+	fmt.Println(string(content))
+	fmt.Println(err)
+	fmt.Println("Request completed.")
 
-	// fmt.Fprintf(w, string(content))
 	fmt.Fprintf(w,
 		`{  
             "mr_runtime": 100,
@@ -57,4 +91,46 @@ func searchHandler(w http.ResponseWriter, req *http.Request) {
                 context:       "Huck's shoes had a big ol hole in them"
             }]
         }`)
+}
+
+func postFile(filename string, targetURL string) (*http.Response, error) {
+	bodyBuf := &bytes.Buffer{}
+	bodyWriter := multipart.NewWriter(bodyBuf)
+
+	// this step is very important
+	fileWriter, err := bodyWriter.CreateFormFile("job.jar", filename)
+	if err != nil {
+		fmt.Println("error writing to buffer")
+		return nil, err
+	}
+
+	// open file handle
+	fh, err := os.Open(filename)
+	if err != nil {
+		fmt.Println("error opening file")
+		return nil, err
+	}
+
+	//iocopy
+	_, err = io.Copy(fileWriter, fh)
+	if err != nil {
+		return nil, err
+	}
+
+	contentType := bodyWriter.FormDataContentType()
+	fmt.Println(contentType)
+	bodyWriter.Close()
+
+	resp, err := http.Post(targetURL, contentType, bodyBuf)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(resp.Status)
+	fmt.Println(string(respBody))
+	return resp, nil
 }
