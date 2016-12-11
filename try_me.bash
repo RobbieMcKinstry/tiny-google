@@ -2,7 +2,7 @@
 rake build
 
 # launch the docker containers (run from the host machine)
-rake up
+rake run
 
 # ssh into the spark box (run from the host machine)
 docker exec -it finalproject_spark_1 /bin/bash
