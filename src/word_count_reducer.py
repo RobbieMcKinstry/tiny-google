@@ -2,9 +2,13 @@
 
 import sys
 
+
 current_word = None
 overall_count = 0
 word = None
+
+filename = sys.stdin.readline()
+print filename
 
 #get input from Stdin
 for line in sys.stdin:

@@ -1,4 +1,11 @@
 import sys
+import os
+
+#Get the filename
+filename = os.environ[mapreduce_map_input_file]
+
+#Print filename, i.e. pass it as input to the reducer
+print filename
 
 for line in sys.stdin:
 	line = line.strip()
