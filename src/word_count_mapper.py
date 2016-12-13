@@ -1,11 +1,14 @@
+#!/usr/bin/env python
+
 import sys
 import os
 
 #Get the filename
-filename = os.environ[mapreduce_map_input_file]
+# doc_name = os.environ[mapreduce_map_input_file]
+doc_name = "/mounted/docs/doc.txt"
 
-#Print filename, i.e. pass it as input to the reducer
-print filename
+#Print document name, i.e. pass it as input to the reducer
+print doc_name
 
 for line in sys.stdin:
 	line = line.strip()
