@@ -28,18 +28,12 @@ $(function() {
         // Make a GET request to the /tiny-google URL for the particular search term
         $.getJSON(url, { search_query: cmd }, function(data) {
 
-            var mr_runtime = data.mr_runtime;
-            var spark_runtime = data.spark_runtime;
-            var links = data.links;
-
-
-            // JACK START HERE
-
-            term.echo("Spark Runtime: " + spark_runtime + "\n");
-            term.echo("MR Runtime: " + mr_runtime + "\n");
-
-
-            // JACK DON'T MODIFY BENEATH THIS LINE
+            term.echo("System time: " + data.Time);
+            data.Links.forEach((docData) => {
+                term.echo("Document name: " + docData.DocumentName);
+                term.echo("Document path: " + docData.DocumentPath);
+                term.echo("Document frequency: " + docData.Frequency);
+            });
         });
     }
 

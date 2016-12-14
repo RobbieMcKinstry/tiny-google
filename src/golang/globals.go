@@ -19,6 +19,8 @@ const (
 
 	executeURI  = endpointBase + "/jobs?appName=test&classPath=spark.jobserver.SimpleApp&context=test-context&sync=true"
 	jarFilePath = "/mounted/target/scala-2.11/simple-project_2.11-1.0.jar"
+
+	indexPath = "/mounted/InvertedIndex.json"
 )
 
 type (
@@ -28,5 +30,8 @@ type (
 		Frequency    float64
 	}
 
-	invertedIndex map[string]documentData
+	invertedIndex struct {
+		Time  string
+		Links map[string][]documentData
+	}
 )

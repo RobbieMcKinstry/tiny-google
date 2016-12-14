@@ -1,0 +1,14 @@
+{
+    "Time": "150ms",
+    ":inks": {
+        "hello": [{
+            "DocumentPath": "/Foobar",
+            "DocumentName": "FooBar.txt",
+            "Frequency": 0.98
+        }, {
+            "DocumentPath": "/TheCatReturns",
+            "DocumentName": "CatReturns.txt",
+            "Frequency": 0.11
+        }]
+    }
+}
