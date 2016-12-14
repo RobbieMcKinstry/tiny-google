@@ -1,4 +1,14 @@
-package handlers
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"mime/multipart"
+	"net/http"
+	"os"
+)
 
 func postFile(filename string, targetURL string) (*http.Response, error) {
 	bodyBuf := &bytes.Buffer{}

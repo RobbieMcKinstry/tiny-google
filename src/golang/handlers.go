@@ -1,7 +1,16 @@
-package handlers
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"time"
+)
 
 func init() {
-	initContext()
+	time.Sleep(9000 * time.Millisecond)
+	go initContext()
 }
 
 func initContext() {

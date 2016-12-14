@@ -1,4 +1,4 @@
-package handlers
+package main
 
 const (
 	// StaticDir points to the static directory
