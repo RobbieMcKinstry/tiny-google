@@ -8,9 +8,12 @@ import string
 
 #Get the filename
 try:
-    doc_name = os.environ['mapreduce_map_input_file']
+    doc_path = os.environ['mapreduce_map_input_file']
 except KeyError:
-    doc_name = os.environ['map_input_file']
+    doc_path = os.environ['map_input_file']
+
+#Split based on '/' and get the last item in the split list
+doc_name = doc_path.split('/')[-1]  
 
 #For testing only
 # doc_name = "/mounted/docs/doc.txt"
