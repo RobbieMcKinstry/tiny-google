@@ -1,6 +1,6 @@
 {
     "Time": "150ms",
-    ":inks": {
+    "Links": {
         "hello": [{
             "DocumentPath": "/Foobar",
             "DocumentName": "FooBar.txt",
