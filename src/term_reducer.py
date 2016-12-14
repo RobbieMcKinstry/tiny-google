@@ -31,11 +31,11 @@ for line in sys.stdin:
             #Sort the list by frequency in descending order
             doc_freq_table.sort(key=itemgetter(1), reverse=True)
             
-            print word,
+            print('%s\n{\n') % (word),
             #Iterate through the sorted list
             for value in doc_freq_table:
-                print('%s:%s') % (value[0], value[1]),
-            print('\n')
+                print('Document:\t%s\nFrequency:\t%s\n') % (value[0], value[1]),
+            print('}\n')
             #Clear the list
             doc_freq_table = []
 
@@ -45,9 +45,9 @@ if current_word == word:
     #Sort the list by frequency in descending order
     doc_freq_table.sort(key=itemgetter(1), reverse=True)
     
-    print doc_name,
+    print('%s\n{\n') % (word),
     #Iterate through the sorted list
     for value in doc_freq_table:
-        print('%s:%s') % (value[0], value[1]),
-    print('\n')
+        print('\n{\nDocument:\t%s\nFrequency:\t%s\n') % (value[0], value[1]),
+    print('}\n')
     doc_freq_table = []
