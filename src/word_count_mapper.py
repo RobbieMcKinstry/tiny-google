@@ -29,7 +29,7 @@ for line in sys.stdin:
     for word in words:
         #Strip the punctuation from each word
         word = word.translate(None, string.punctuation)
-        # word = word.encode('ascii', 'replace').decode('utf-8', 'ignore')
+        word = ''.join(e for e in word if e.isalnum())
 
         key = ':'.join([doc_name, word])
 
