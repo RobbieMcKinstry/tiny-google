@@ -8,7 +8,10 @@ for line in sys.stdin:
 
     #input is - document name::word\tfrequency
     doc_word, count = line.split('\t', 1)
-    # print('doc_word --> %s') % (doc_word)
+    #Get the document and word from previous .split
     doc_name, word = doc_word.split(':')
+    #Join the document and frequency
+    value = ":".join([doc_name, count])
 
-    print ('%s\t%s:%s') % (word, doc_name, count)
+    #Output as word\tdocument:frequency
+    print ('%s\t%s') % (word, value)
