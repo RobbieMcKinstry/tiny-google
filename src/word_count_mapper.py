@@ -7,16 +7,19 @@ import os
 import string
 
 #Get the filename
-try:
-    doc_path = os.environ['mapreduce_map_input_file']
-except KeyError:
-    doc_path = os.environ['map_input_file']
+doc_path = os.environ['mapreduce_map_input_file']
 
-#Split based on '/' and get the last item in the split list
-doc_name = doc_path.split('/')[-1]  
 
 #For testing only
-# doc_name = "/mounted/docs/doc.txt"
+# doc_path = "file:/Users/jackmcquown/Desktop/CS/CS1699/Projects/tiny-google/books/floop.txt"
+
+#Split based on '/' and get the last item in the split list
+doc_name = doc_path.split('/')[-1]
+
+# print doc_path
+
+#For testing only
+# doc_name = "doc.txt"
 
 #Print document name, i.e. pass it as input to the reducer
 # print doc_name
@@ -37,4 +40,4 @@ for line in sys.stdin:
         #i.e. input to the WordCount reducer
         #
         #tuple with each word accompained by a 1
-        print '%s\t%s' % (key, 1)
+        print '%s**%s\t%s' % (doc_path, key, 1)
