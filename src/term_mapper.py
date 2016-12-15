@@ -12,9 +12,5 @@ for line in sys.stdin:
     doc_name = splurg[-2]
     word = splurg[-1]
 
-    doc_path, document = doc_name.split('**')
-    #Join the document and frequency
-    # value = ":".join([count, doc_name])
-
     #Output as word\tdocument:frequency
     print ('%s\t%s:%s') % (word, doc_name, count)
