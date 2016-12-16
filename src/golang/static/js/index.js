@@ -8,38 +8,22 @@ var url = '/tiny-google';
 
 $(function() {
 
+    function compareLinks(a, b) {
+        return a.frequency - b.frequency;
+    } 
+
     function search(cmd, term) {
-
-        // Returns a JSON blob
-        // with the following structure
-        // {
-        //     'mr_runtime': Number,
-        //     'spark_runtime': Number,
-        //     'links': [{
-        //         document_name: string,
-        //         document_link: string,
-        //         context:       string,
-        //     }, {
-        //       .............
-        //    }]
-        // }
-
 
         // Make a GET request to the /tiny-google URL for the particular search term
         $.getJSON(url, { search_query: cmd }, function(data) {
 
-            var mr_runtime = data.mr_runtime;
-            var spark_runtime = data.spark_runtime;
-            var links = data.links;
+            term.echo("System time: " + data.Time);
 
-
-            // JACK START HERE
-
-            term.echo("Spark Runtime: " + spark_runtime + "\n");
-            term.echo("MR Runtime: " + mr_runtime + "\n");
-
-
-            // JACK DON'T MODIFY BENEATH THIS LINE
+            var documents = data.Links[cmd].sort(compareLinks);
+            documents.forEach(docData => {
+                term.echo("[[!;;] "                + docData.DocumentPath + "]");
+                term.echo("Document frequency: "   + docData.Frequency);
+            });
         });
     }
 
@@ -48,7 +32,18 @@ $(function() {
     }
 
     function upload(cmd, term) {
-        $.post(url, { document: null } );
+
+        $('#file').simpleUpload("/upload", {
+            success: function(data){
+                console.log("Successful upload");
+                //upload successful 
+            },
+            error: function(error){
+                //upload failed                                              
+                console.log("Upload failed");
+            }
+        });
+
         term.echo(cmd);
     }
 

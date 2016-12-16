@@ -1,8 +1,11 @@
+task default: [ :build, :run, :clean ] do
+end
+
 task build: [ :scala_build, :go_build ] do
 end
 
 task go_build: [] do
-    sh "go build src/golang/main.go"
+    sh "go build -o main src/golang/*.go"
 end
 
 task compass_build: [] do
