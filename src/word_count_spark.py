@@ -8,7 +8,7 @@ import unicodedata
 # from pyspark.sql import SparkSession
 from pyspark import SparkContext
 
-
+word_dict = {}
 if __name__ == "__main__":
     # spark = SparkSession\
     #     .builder\
@@ -17,14 +17,20 @@ if __name__ == "__main__":
 
     sc = SparkContext()
 
-    
-    
-
     #Get the file path from the pair RDD
-    doc_path = sc.wholeTextFiles("../books/floop.txt")
+    doc_path = sc.wholeTextFiles("../books/*")
     doc_path = doc_path.groupByKey().map(lambda x: (x[0], list(x[1]))).collect()
-    doc_path, trash = doc_path[0]
+
+    for (a, b) in doc_path:
+        print('a - %s' % (a))
+
+
+    print('doc_path - %s' % doc_path)
+    doc_path, trash = doc_path
+    print('trash - %s || doc_path(pre) - %s', (trash, doc_path))
     trash, doc_path = doc_path.split(':')
+
+    
 
     #Get the document name from the path
     doc_name = doc_path.split('/')[-1]
@@ -32,7 +38,7 @@ if __name__ == "__main__":
     print("\ndoc_path - %s\n" % doc_path)
     
 
-    filename = sc.textFile(doc_path)
+    filename = sc.read.text(doc_path).rdd.map(lambda r: r[0])
     counts = filename.flatMap(lambda x: x.split(' ')) \
                   .map(lambda x: (x.encode('ascii', 'ignore'), 1)) \
                   .reduceByKey(add)
@@ -45,7 +51,7 @@ if __name__ == "__main__":
     #Create a list to that will hold (document, count)
     doc_freq_list = []
     current_word = None
-    word_dict = {}
+    
 
     #Iterate through the map output
     for (word, doc_count) in doc_map:
