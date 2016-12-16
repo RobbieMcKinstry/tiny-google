@@ -2,10 +2,14 @@ package main
 
 import (
 	"encoding/json"
-	_ "fmt"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 )
 
@@ -26,6 +30,40 @@ func initContext() {
 // IndexHandler handles "/"
 func IndexHandler(w http.ResponseWriter, req *http.Request) {
 	http.Redirect(w, req, "/static/html", http.StatusFound)
+}
+
+// UploadHandle uploads the file
+func UploadHandler(w http.ResponseWriter, req *http.Request) {
+	// parse request
+	const _24K = (1 << 13) * 24
+	if err := req.ParseMultipartForm(_24K); nil != err {
+		fmt.Println("Failed to parse.")
+		return
+	}
+
+	for _, fheaders := range req.MultipartForm.File {
+		for _, hdr := range fheaders {
+			// open uploaded
+			var infile multipart.File
+			infile, err := hdr.Open()
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			// open destination
+			var outfile *os.File
+			if outfile, err = os.Create("/static/html/" + hdr.Filename); nil != err {
+				fmt.Println(err)
+				return
+			}
+			var written int64
+			if written, err = io.Copy(outfile, infile); nil != err {
+				fmt.Println(err)
+				return
+			}
+			w.Write([]byte("uploaded file:" + hdr.Filename + ";length:" + strconv.Itoa(int(written))))
+		}
+	}
 }
 
 // SearchHandler handles the search function.

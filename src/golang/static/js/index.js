@@ -8,31 +8,21 @@ var url = '/tiny-google';
 
 $(function() {
 
+    function compareLinks(a, b) {
+        return a.frequency - b.frequency;
+    } 
+
     function search(cmd, term) {
-
-        // Returns a JSON blob
-        // with the following structure
-        // {
-        //     'mr_runtime': Number,
-        //     'spark_runtime': Number,
-        //     'links': [{
-        //         document_name: string,
-        //         document_link: string,
-        //         context:       string,
-        //     }, {
-        //       .............
-        //    }]
-        // }
-
 
         // Make a GET request to the /tiny-google URL for the particular search term
         $.getJSON(url, { search_query: cmd }, function(data) {
 
             term.echo("System time: " + data.Time);
-            data.Links.forEach((docData) => {
-                term.echo("Document name: " + docData.DocumentName);
-                term.echo("Document path: " + docData.DocumentPath);
-                term.echo("Document frequency: " + docData.Frequency);
+
+            var documents = data.Links[cmd].sort(compareLinks);
+            documents.forEach(docData => {
+                term.echo("[[!;;] "                + docData.DocumentPath + "]");
+                term.echo("Document frequency: "   + docData.Frequency);
             });
         });
     }
@@ -42,7 +32,18 @@ $(function() {
     }
 
     function upload(cmd, term) {
-        $.post(url, { document: null } );
+
+        $('#file').simpleUpload("/upload", {
+            success: function(data){
+                console.log("Successful upload");
+                //upload successful 
+            },
+            error: function(error){
+                //upload failed                                              
+                console.log("Upload failed");
+            }
+        });
+
         term.echo(cmd);
     }
 

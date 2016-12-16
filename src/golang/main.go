@@ -17,6 +17,7 @@ func main() {
 	r.PathPrefix(StaticDir).Handler(s)
 
 	r.Methods("GET").Path("/tiny-google").HandlerFunc(SearchHandler)
+	r.Methods("POST").Path("/upload").HandlerFunc(UploadHandler)
 	r.HandleFunc("/", IndexHandler)
 
 	http.Handle("/", r)
