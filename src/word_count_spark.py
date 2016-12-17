@@ -65,8 +65,10 @@ if __name__ == "__main__":
                 word_dict[current_word] = doc_freq_list
                 #Clear the list
                 doc_freq_list = []
-                inner_dict = {}
 
+            inner_dict = {}
+            current_word = word    
+            doc_freq_list.append([doc, count])
             current_word = word    
             inner_dict["Frequency"] = count
             inner_dict["Path"] = doc_path
@@ -87,5 +89,4 @@ if __name__ == "__main__":
     #         print('Document:\t%s\nFrequency:\t%s\n}' % (value['Document'], value['Path']))
     with open('spark_results.json', 'w') as fp:
         json.dump(word_dict, fp)
-
     spark.stop()        
