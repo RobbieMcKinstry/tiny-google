@@ -19,6 +19,7 @@ value = None
 word = None
 doc_freq_table = []
 word_dict = {}
+inner_dict = {}
 
 for line in sys.stdin:
     #Strip \n off the right side
@@ -40,11 +41,17 @@ for line in sys.stdin:
 
     #Same idea as the word count reducer
     if current_word == word:
-        doc_freq_table.append([doc_name, doc_path, frequency])
+        #Add fields to the dictionary
+        inner_dict["Frequency"] = frequency
+        inner_dict["Path"] = doc_path
+        inner_dict["Document"] = doc_name
+        #Append the dictionary to the list
+        doc_freq_table.append(inner_dict)
     else:
         if current_word:
+            #print('\nFreq - %s\n') % type(inner_dict.get("Frequency"))
             #Sort the list by frequency in descending order
-            doc_freq_table.sort(key=itemgetter(2), reverse=True)
+            doc_freq_table.sort(key=itemgetter('Frequency'), reverse=True)
 
             word_dict[current_word] = doc_freq_table
             
@@ -57,12 +64,20 @@ for line in sys.stdin:
 
             #Clear the list
             doc_freq_table = []
+            inner_dict = {}
+
 
         current_word = word
-        doc_freq_table.append([doc_name, doc_path, frequency])
+
+        #Add fields to the dictionary
+        inner_dict["Frequency"] = frequency
+        inner_dict["Path"] = doc_path
+        inner_dict["Document"] = doc_name
+        #Append the dictionary to the list
+        doc_freq_table.append(inner_dict)
 if current_word == word:
     #Sort the list by frequency in descending order
-    doc_freq_table.sort(key=itemgetter(2), reverse=True)
+    doc_freq_table.sort(key=itemgetter('Frequency'), reverse=True)
 
     word_dict[current_word] = doc_freq_table
     
@@ -71,8 +86,6 @@ if current_word == word:
     # for value in doc_freq_table:
     #     print('Document:\t%s\nPath:\t%s\nFrequency:\t%s\n') % (value[0], value[1], value[2]),
     # print('}\n')
-
-    doc_freq_table = []
 
 #Dump the dictionary as a json
 with open('result.json', 'w') as fp:
