@@ -40,7 +40,7 @@ func UploadHandler(w http.ResponseWriter, req *http.Request) {
 			}
 			// open destination
 			var outfile *os.File
-			path := "src/golang/static/html/" + hdr.Filename
+			path := "/static/html/" + hdr.Filename
 			if outfile, err = os.Create(path); nil != err {
 				fmt.Println(err)
 				return
@@ -54,6 +54,7 @@ func UploadHandler(w http.ResponseWriter, req *http.Request) {
 			fmt.Println(RunHadoop(path))
 			fmt.Println(RunSpark(path))
 			w.Write([]byte("uploaded file:" + hdr.Filename + ";length:" + strconv.Itoa(int(written))))
+			fmt.Println("Finished processing the jobs!")
 		}
 	}
 }

@@ -17,9 +17,8 @@ const (
 	outputPath     = "./output"
 	sparkSubmitJar = "target/scala-2.11/simple-project_2.11-1.0.jar"
 
-	//hadoopCmd    = "hadoop jar %s -mapper %s -reducer %s -input %s -output %s"
-	hadoopCmd    = "./src/hadoop_command.sh"
-	sparkCommand = "./src/spark_command.sh"  spark-submit %s %s
+	hadoopCmd    = "./src/hadoop_command.sh %s"
+	sparkCommand = "./src/spark_command.sh %s"
 )
 
 func RunSpark(filepath string) string {
@@ -78,11 +77,11 @@ func RunHadoop(filepath string) string {
 	return string(out)
 }
 func HadoopCommand(filepath string) []string {
-	return strings.Split(hadoopCmd, " ")
+	return strings.Split(fmt.Sprintf(hadoopCmd, filepath), " ")
 }
 
 func SparkCommand(filepath string) []string {
-	return strings.Split(fmt.Sprintf(sparkCommand, sparkSubmitJar, filepath), " ")
+	return strings.Split(fmt.Sprintf(sparkCommand, filepath), " ")
 }
 
 func MakeSparkSubprocess(filepath string) *exec.Cmd {
