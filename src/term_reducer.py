@@ -4,15 +4,6 @@ import sys
 from operator import itemgetter
 import json
 
-#input - word\tpath**document:frequency
-#ouput - word: 
-#              document1
-#              path
-#              frequency
-#
-#              document2
-#              path
-#              frequency, etc.
 
 current_word = None
 value = None
@@ -88,6 +79,18 @@ if current_word == word:
     # print('}\n')
 
 #Dump the dictionary as a json
-with open('src/InvertedIndexHadoop.json', 'w') as fp:
+with open('src/InvertedIndexHadoop.json', 'r+') as fp:
+    inverted_index = json.load(fp)
+    fp.truncate()
 
-    json.dump( { 'Links': word_dict }, fp)
+    for word, word_data in word_dict.iteritems():
+        if word in inverted_index['Links']:
+            for doc in inverted_index['Links'].get(word):
+                if doc['DocumentName'] == word_data['DocumentName']:
+                    continue
+                else:
+                    inverted_index['Links'][word].append(word_data)
+        else:
+            inverted_index[word] = [ word_data ]
+
+    json.dump( inverted_index, fp)

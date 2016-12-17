@@ -22,7 +22,7 @@ if __name__ == "__main__":
     inverted_index = None
     input_path, inverted_index_path = sys.argv[1], sys.argv[2]
     with open(inverted_index_path) as f:
-        inverted_index = json.load(f)
+        inverted_index = json.load(f)['Links']
 
     # with open(input_path) as f:
     #     text_blob = input_path.read_lines()
@@ -31,12 +31,13 @@ if __name__ == "__main__":
     doc_name = input_path.split('/')[-1]    
     doc_path = "/" + doc_name
 
-
     filename = spark.read.text(input_path).rdd.map(lambda r: r[0])
     counts = filename.flatMap(lambda x: x.split(' ')) \
                   .map(lambda x: (x.encode('ascii', 'ignore'), 1)) \
-                  .reduceByKey(add)
+                  .reduceByKey(add).collect()
 
+    if len(counts) == 0:
+        raise Exception("Uh oh counts is 0 length")
     dictionary_list = {}
     for word_tuple in counts:
         word, count = word_tuple[0], word_tuple[1]
@@ -46,7 +47,7 @@ if __name__ == "__main__":
             'DocumentName': doc_name,
         }
 
-    for word, word_data in dictionary_list:
+    for word, word_data in dictionary_list.iteritems():
         if word in inverted_index:
            for doc in inverted_index.get(word):
                 if doc['DocumentName'] == word_data['DocumentName']:
@@ -56,9 +57,9 @@ if __name__ == "__main__":
         else:
             inverted_index[word] = [ word_data ] 
 
-   with open(inverted_index_path, 'w') as fp:
+    with open(inverted_index_path, 'r+') as fp:
         json.dump( { 'Links': inverted_index }, fp)
-    spark.stop()        
+    spark.stop() 
 
 
 """
