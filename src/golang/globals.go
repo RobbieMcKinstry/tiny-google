@@ -5,8 +5,9 @@ const (
 	StaticDir = "/static/"
 
 	// Port is the port number
-	Port      = ":8080"
-	indexPath = "src/InvertedIndex.json"
+	Port            = ":8080"
+	indexPathHadoop = "src/InvertedIndexHadoop.json"
+	indexPathSpark  = "src/InvertedIndexSpark.json"
 )
 
 type (

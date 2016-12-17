@@ -71,8 +71,8 @@ for line in sys.stdin:
 
         #Add fields to the dictionary
         inner_dict["Frequency"] = frequency
-        inner_dict["Path"] = doc_path
-        inner_dict["Document"] = doc_name
+        inner_dict["DocumentPath"] = doc_path
+        inner_dict["DocumentName"] = doc_name
         #Append the dictionary to the list
         doc_freq_table.append(inner_dict)
 if current_word == word:
@@ -88,5 +88,6 @@ if current_word == word:
     # print('}\n')
 
 #Dump the dictionary as a json
-with open('result.json', 'w') as fp:
-    json.dump(word_dict, fp)
+with open('src/InvertedIndexHadoop.json', 'w') as fp:
+
+    json.dump( { 'Links': word_dict }, fp)

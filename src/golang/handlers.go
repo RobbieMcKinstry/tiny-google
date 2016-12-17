@@ -51,10 +51,9 @@ func UploadHandler(w http.ResponseWriter, req *http.Request) {
 				return
 			}
 			fmt.Println("Successfully uploaded file. Getting ready to run hadoop job.")
-			w.Write([]byte("uploaded file:" + hdr.Filename + ";length:" + strconv.Itoa(int(written))))
-
 			fmt.Println(RunHadoop(path))
-			// RunSpark(path)
+			fmt.Println(RunSpark(path))
+			w.Write([]byte("uploaded file:" + hdr.Filename + ";length:" + strconv.Itoa(int(written))))
 		}
 	}
 }
@@ -64,7 +63,7 @@ func SearchHandler(w http.ResponseWriter, req *http.Request) {
 	var i invertedIndex
 
 	t := MeasureTime(func() {
-		i = *loadInvertedIndex(indexPath)
+		i = *loadInvertedIndex(indexPathHadoop)
 	})
 	i.Time = t.String()
 	js, err := json.Marshal(i)

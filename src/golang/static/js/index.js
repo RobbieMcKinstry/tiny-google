@@ -21,7 +21,7 @@ $(function() {
 
             var documents = data.Links[cmd].sort(compareLinks);
             documents.forEach(docData => {
-                term.echo("[[!;;] "                + docData.DocumentPath + "]");
+                term.echo("[[!;;]"                 + docData.DocumentName + "]");
                 term.echo("Document frequency: "   + docData.Frequency);
             });
         });
