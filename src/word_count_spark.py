@@ -1,44 +1,35 @@
 from __future__ import print_function
 
 import sys
+import json
 from operator import add 
 from operator import itemgetter
 import unicodedata
 
-# from pyspark.sql import SparkSession
-from pyspark import SparkContext
+from pyspark.sql import SparkSession
+# from pyspark import SparkContext
 
 word_dict = {}
 if __name__ == "__main__":
-    # spark = SparkSession\
-    #     .builder\
-    #     .appName("PythonWordCount")\
-    #     .getOrCreate()
+    spark = SparkSession\
+        .builder\
+        .appName("PythonWordCount")\
+        .getOrCreate()
 
-    sc = SparkContext()
+    # sc = SparkContext()
 
-    #Get the file path from the pair RDD
-    doc_path = sc.wholeTextFiles("../books/*")
-    doc_path = doc_path.groupByKey().map(lambda x: (x[0], list(x[1]))).collect()
+    inverted_index = None
+    input_path, inverted_index_path = sys.argv[1], sys.argv[2]
+    with open(inverted_index_path) as f:
+        inverted_index = json.load(f)
 
-    for (a, b) in doc_path:
-        print('a - %s' % (a))
-
-
-    print('doc_path - %s' % doc_path)
-    doc_path, trash = doc_path
-    print('trash - %s || doc_path(pre) - %s', (trash, doc_path))
-    trash, doc_path = doc_path.split(':')
-
-    
+    # with open(input_path) as f:
+    #     text_blob = input_path.read_lines()
 
     #Get the document name from the path
-    doc_name = doc_path.split('/')[-1]
+    doc_name = input_path.split('/')[-1]    
 
-    print("\ndoc_path - %s\n" % doc_path)
-    
-
-    filename = sc.read.text(doc_path).rdd.map(lambda r: r[0])
+    filename = spark.read.text(input_path).rdd.map(lambda r: r[0])
     counts = filename.flatMap(lambda x: x.split(' ')) \
                   .map(lambda x: (x.encode('ascii', 'ignore'), 1)) \
                   .reduceByKey(add)
@@ -85,3 +76,4 @@ if __name__ == "__main__":
         print('\n%s\n{' % (word))
         for value in doc_freq:
             print('Document:\t%s\nFrequency:\t%s\n}' % (value[0], value[1]))
+    spark.stop()        
