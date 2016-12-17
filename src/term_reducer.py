@@ -34,8 +34,8 @@ for line in sys.stdin:
     if current_word == word:
         #Add fields to the dictionary
         inner_dict["Frequency"] = frequency
-        inner_dict["Path"] = doc_path
-        inner_dict["Document"] = doc_name
+        inner_dict["DocumentPath"] = doc_path
+        inner_dict["DocumentName"] = doc_name
         #Append the dictionary to the list
         doc_freq_table.append(inner_dict)
     else:
@@ -73,28 +73,32 @@ if current_word == word:
     word_dict[current_word] = doc_freq_table
     
     # print('%s\n{\n') % (current_word),
-    # #Iterate through the sorted list
+    #Iterate through the sorted list
     # for value in doc_freq_table:
     #     print('Document:\t%s\nPath:\t%s\nFrequency:\t%s\n') % (value[0], value[1], value[2]),
     # print('}\n')
 
+    #Dump the dictionary as a json
+with open('src/InvertedIndexHadoop.json', 'w') as fp:
+      json.dump({ 'Links': word_dict}, fp)
+
 #Dump the dictionary as a json
-inverted_index = None
-with open('src/InvertedIndexHadoop.json', 'r+') as fp:
-    inverted_index = json.load(fp)
+# inverted_index = None
+# with open('src/InvertedIndexHadoop.json', 'r+') as fp:
+#     inverted_index = json.load(fp)
 
-with open('src/InvertedIndexHadoop.json', 'w+') as fp:
-    for word, word_data in word_dict.iteritems():
-        if word in inverted_index['Links']:
-            for doc in inverted_index['Links'].get(word):
-                if doc['DocumentName'] == word_data[0]['DocumentName']:
-                    continue
-                else:
-                    inverted_index['Links'][word].append(word_data)
-        else:
-            inverted_index['Links'][word] = [ word_data ]
+# with open('src/InvertedIndexHadoop.json', 'w+') as fp:
+#     for word, word_data in word_dict.iteritems():
+#         if word in inverted_index['Links']:
+#             for doc in inverted_index['Links'].get(word):
+#                 if doc['DocumentName'] == word_data[0]['DocumentName']:
+#                     continue
+#                 else:
+#                     inverted_index['Links'][word].append(word_data)
+#         else:
+#             inverted_index['Links'][word] = [ word_data ]
 
-    for word, array in inverted_index['Links'].iteritems():
-        inverted_index['Links'][word] = array[0]
+#     for word, array in inverted_index['Links'].iteritems():
+#         inverted_index['Links'][word] = array[0]
 
-    json.dump( inverted_index, fp)
+#     json.dump( inverted_index, fp)
