@@ -58,6 +58,7 @@ if __name__ == "__main__":
             inverted_index[word] = [ word_data ] 
 
     with open(inverted_index_path, 'r+') as fp:
+        fp.seek(0)
         json.dump( { 'Links': inverted_index }, fp)
     spark.stop() 
 

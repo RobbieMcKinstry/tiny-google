@@ -64,7 +64,7 @@ func SearchHandler(w http.ResponseWriter, req *http.Request) {
 	var i invertedIndex
 
 	t := MeasureTime(func() {
-		i = *loadInvertedIndex(indexPathHadoop)
+		i = *loadInvertedIndex(indexPathSpark)
 	})
 	i.Time = t.String()
 	js, err := json.Marshal(i)

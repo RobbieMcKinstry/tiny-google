@@ -79,18 +79,22 @@ if current_word == word:
     # print('}\n')
 
 #Dump the dictionary as a json
+inverted_index = None
 with open('src/InvertedIndexHadoop.json', 'r+') as fp:
     inverted_index = json.load(fp)
-    fp.truncate()
 
+with open('src/InvertedIndexHadoop.json', 'w+') as fp:
     for word, word_data in word_dict.iteritems():
         if word in inverted_index['Links']:
             for doc in inverted_index['Links'].get(word):
-                if doc['DocumentName'] == word_data['DocumentName']:
+                if doc['DocumentName'] == word_data[0]['DocumentName']:
                     continue
                 else:
                     inverted_index['Links'][word].append(word_data)
         else:
-            inverted_index[word] = [ word_data ]
+            inverted_index['Links'][word] = [ word_data ]
+
+    for word, array in inverted_index['Links'].iteritems():
+        inverted_index['Links'][word] = array[0]
 
     json.dump( inverted_index, fp)
