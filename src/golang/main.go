@@ -15,6 +15,7 @@ func main() {
 	r := mux.NewRouter()
 	s := http.StripPrefix(StaticDir, http.FileServer(http.Dir(StaticDir)))
 	r.PathPrefix(StaticDir).Handler(s)
+	fmt.Println("Registered routes. Getting ready to launch")
 
 	r.Methods("GET").Path("/tiny-google").HandlerFunc(SearchHandler)
 	r.Methods("POST").Path("/upload").HandlerFunc(UploadHandler)

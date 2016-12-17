@@ -5,6 +5,7 @@ task build: [ :scala_build, :go_build ] do
 end
 
 task go_build: [] do
+    sh "cp -r src/golang/static /"
     sh "go build -o main src/golang/*.go"
 end
 
